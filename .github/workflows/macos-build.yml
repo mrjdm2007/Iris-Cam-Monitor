@@ -31,7 +31,21 @@ jobs:
           xcodebuild \
             -project IrisCamMonitor.xcodeproj \
             -scheme IrisCamMonitor \
-            -configuration Debug \
+            -configuration Release
+            -derivedDataPath build/DerivedData \
             -sdk macosx \
             CODE_SIGNING_ALLOWED=NO \
             build
+      - name: Package macOS app
+        run: |
+          APP=build/DerivedData/Build/Products/Release/IrisCamMonitor.app
+          test -d "$APP"
+          ditto -c -k --sequesterRsrc --keepParent "$APP" IrisCamMonitor-macOS.zip
+
+      - name: Upload macOS app
+        uses: actions/upload-artifact@v4
+        with:
+          name: IrisCamMonitor-macOS
+          path: IrisCamMonitor-macOS.zip
+          if-no-files-found: error
+          retention-days: 14
