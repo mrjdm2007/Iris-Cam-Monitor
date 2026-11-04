@@ -1,4 +1,5 @@
 import SwiftUI
+import AppKit
 import WebKit
 
 struct ContentView: View {
@@ -126,7 +127,6 @@ private struct MonitorWebView: NSViewRepresentable {
         configuration.allowsAirPlayForMediaPlayback = true
         let view = WKWebView(frame: .zero, configuration: configuration)
         view.navigationDelegate = context.coordinator
-        view.setValue(false, forKey: " drawsBackground")
         view.load(URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 15))
         return view
     }
