@@ -7,11 +7,31 @@ on:
     branches: [main]
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   build:
-    runs-on: macos-15
+    # macos-14 is a stable, widely available GitHub-hosted Xcode runner.
+    runs-on: macos-14
+    timeout-minutes: 30
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Show Xcode version
+        run: xcodebuild -version
+
+      - name: Verify shared scheme
+        run: xcodebuild -list -project IrisCamMonitor.xcodeproj
+
       - name: Build Iris Cam Monitor
-        run: xcodebuild -project IrisCamMonitor.xcodeproj -scheme IrisCamMonitor -configuration Debug -sdk macosx CODE_SIGNING_ALLOWED=NO build
+        run: |
+          set -o pipefail
+          xcodebuild \
+            -project IrisCamMonitor.xcodeproj \
+            -scheme IrisCamMonitor \
+            -configuration Debug \
+            -sdk macosx \
+            CODE_SIGNING_ALLOWED=NO \
+            build
