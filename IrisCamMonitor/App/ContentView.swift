@@ -62,7 +62,7 @@ struct ContentView: View {
             if let url = connectedURL {
                 MonitorWebView(url: url, onLoadChange: { loaded in
                     isConnected = loaded
-                    connectionMessage = loaded ? "Monitor page loaded. Video and controls are provided by Iris Cam." : "Loading monitor…"
+                    connectionMessage = loaded ? "Monitor page loaded. Video and controls are provided by Iris Cam." : "Could not load monitor. Check the address, PIN, and that Monitor is running."
                 })
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
