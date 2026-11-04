@@ -31,7 +31,7 @@ jobs:
           xcodebuild \
             -project IrisCamMonitor.xcodeproj \
             -scheme IrisCamMonitor \
-            -configuration Release
+            -configuration Release \
             -derivedDataPath build/DerivedData \
             -sdk macosx \
             CODE_SIGNING_ALLOWED=NO \
