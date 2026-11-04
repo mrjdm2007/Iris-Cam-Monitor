@@ -76,6 +76,11 @@ struct ContentView: View {
                     Text("Both devices must be connected to the same Wi-Fi network.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
+                    Text("USB: connect the phone, enable USB debugging, run  adb reverse tcp:8080 tcp:8080  on the Mac, then enter localhost:8080.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
+                        .frame(maxWidth: 460)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
@@ -140,6 +145,16 @@ private struct MonitorWebView: NSViewRepresentable {
     final class Coordinator: NSObject, WKNavigationDelegate {
         private let onLoadChange: (Bool) -> Void
         init(onLoadChange: @escaping (Bool) -> Void) { self.onLoadChange = onLoadChange }
+        func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse,
+                     decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
+            if let response = navigationResponse.response as? HTTPURLResponse,
+               !(200...299).contains(response.statusCode) {
+                onLoadChange(false)
+                decisionHandler(.cancel)
+                return
+            }
+            decisionHandler(.allow)
+        }
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
             onLoadChange(true)
         }
